@@ -1,8 +1,28 @@
+import sys
+import datetime
 import socket
 import pickle
 
-import recolherinformacoesdacpu
-# import recolherinformacoesdamemoria
+import cpu
+import memoria
+import disco
+
+def log(opcao, termino=False):
+    if opcao == '0':
+        if not termino:
+            print(f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Encerrando conexao""")
+        if termino:
+            print(f"""[\033[1;31m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Conexao encerrada""")
+    if opcao == '1':
+        if not termino:
+            print(f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Recolhendo informacoes da CPU""")
+        if termino:
+            print(f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Coleta de informacoes da CPU bem sucedida""")
+    if opcao == '2':
+        if not termino:
+            print(f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Recolhendo informacoes da Memoria""")
+        if termino:
+            print(f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Coleta de informacoes da Memoria bem sucedida""")
 
 host = socket.gethostname()
 port = 9991
@@ -19,28 +39,37 @@ print(f"""Conectado a: {str(client_host)}""")
 
 running = True
 while running:
-    try:
+    if not socket_client._closed:
         msg = socket_client.recv(1024).decode()
-        print(msg)
-        if msg == """fim""":
-            print("""Shutting down connection""")
-            socket_client.close()
-            running = False
         if msg == """0""":
-            resposta = [recolherinformacoesdacpu.info_da_cpu(),
-                   recolherinformacoesdacpu.freq_da_cpu(),
-                   recolherinformacoesdacpu.mostra_uso_cpu(),
-                   recolherinformacoesdacpu.porc_uso_cpu()
-                   ]
-            aux = str(resposta).encode()
-            pickle.dumps(aux)
-        #if msg == """1""":
-
-
-
-        # resposta = f"""{host}: {msg}""".encode()
-        socket_client.send(resposta)
-    except Exception as exc:
-        socket_client(exc) 
+            log(msg)
+            resposta = 'Conexao encerrada'
+            resposta_bytes = pickle.dumps(resposta)
+            socket_client.send(resposta_bytes)
+            socket_client.close()
+            tcp_server.close()
+            log(msg, True)
+            sys.exit()
+        if msg == """1""":
+            log(msg)
+            resposta = cpu.info_cpu()
+            resposta_bytes = pickle.dumps(resposta)
+            socket_client.send(resposta_bytes)
+            log(msg, True)
+        if msg == """2""":
+            log(msg)
+            resposta = memoria.info_memoria()
+            resposta_bytes = pickle.dumps(resposta)
+            socket_client.send(resposta_bytes)
+            log(msg, True)
+        if msg == """3""":
+            log(msg)
+            resposta = disco.info_disco()
+            resposta_bytes = pickle.dumps(resposta)
+            socket_client.send(resposta_bytes)
+            log(msg, True)
+    if socket_client._closed:
+        print('Socket closed')
+        running = False
 
 tcp_server.close()
