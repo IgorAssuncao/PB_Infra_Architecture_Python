@@ -1,45 +1,53 @@
-import subprocess, psutil, time, nmap, os
-
-nome = input("Entre com o nome do processo a ser buscado: ")
-pid = subprocess.Popen([nome], shell = True).pid
-p = psutil.Process(pid)
-process = psutil.Process(os.getpid())
-lp = psutil.pids()
-lista_pid = []
+import os
+import time
+import psutil
 
 dict_processes = {}
 
 for proc in psutil.process_iter():
-    print(proc)
-    process_as_dict = proc.as_dict(attrs = ['pid', 'name'])
+    process_as_dict = proc.as_dict(attrs=['pid', 'name'])
     dict_processes[process_as_dict['pid']] = process_as_dict['name']
 
-print(dict_processes)
 
-for i in lp:
-    p = psutil.Process(i)
-    if p.pid == pid:
-        lista_pid.append(str(i))
+def infoProcesso(process):
+    proc = psutil.Process(process)
+    detalhes_processo = []
+    try:
+        # print("Nome:", proc.name())
+        # print("Executável:", proc.exe())
+        # print("Tempo de criação:", time.ctime(proc.create_time()))
+        # print("Tempo de usuário:", proc.cpu_times().user, "s")
+        # print("Tempo de sistema:", proc.cpu_times().system, "s")
+        # print("Percentual de uso de CPU:",
+            #   proc.cpu_percent(), "%")
+        # perc_mem = '{:.2f}'.format(proc.memory_percent())
+        # print("Percentual de uso de memória:", perc_mem, "%")
+        # mem = '{:.2f}'.format(proc.memory_info().rss/1024/1024)
+        # print("Uso de memória:", mem, "MB")
+        # print("Número de threads:", proc.num_threads())
+
+        detalhes_processo = [proc.name(),
+                             proc.exe(),
+                             time.ctime(proc.create_time()),
+                             proc.cpu_times().user,
+                             proc.cpu_times().system,
+                             proc.cpu_percent(),
+                             proc.memory_percent(),
+                             proc.memory_info(),
+                             proc.num_threads()
+                             ]
+    except:
+        pass
+
+    return detalhes_processo
 
 
-def infoProcesso():
-    if len(lista_pid) > 0:
-        print(lista_pid)
-        for process in dict_processes:
-            proc = psutil.Process(process)
-            print(proc)
-            print("Nome:", proc.name())
-            print("Executável:", process.exe())
-            print("Tempo de criação:", time.ctime(proc.create_time()))
-            print("Tempo de usuário:", process.cpu_times().user, "s")
-            print("Tempo de sistema:", process.cpu_times().system, "s")
-            print("Percentual de uso de CPU:", process.cpu_percent(interval=1.0), "%")
-            perc_mem = '{:.2f}'.format(process.memory_percent())
-            print("Percentual de uso de memória:", perc_mem, "%")
-            mem = '{:.2f}'.format(process.memory_info().rss/1024/1024)
-            print("Uso de memória:", mem, "MB")
-            print("Número de threads:", process.num_threads())
-        else:
-            print(pid, "Não está sendo executado!")
+def info_processos():
+    processos = {}
+    for process in dict_processes:
+        processos[process] = infoProcesso(process)
 
-infoProcesso()
+    processos = {pid: detalhes for (
+        pid, detalhes) in processos.items() if len(detalhes) > 1}
+
+    return processos
