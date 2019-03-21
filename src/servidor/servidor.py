@@ -9,7 +9,7 @@ import disco
 import rede
 import processos
 
-BYTES = 4096
+BYTES = 4096000
 
 
 def log(opcao, termino=False):
@@ -42,6 +42,13 @@ def log(opcao, termino=False):
             print(
                 f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Coleta de informacoes do Disco bem sucedida""")
     if opcao == '4':
+        if not termino:
+            print(
+                f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Recolhendo informacoes dos Processos""")
+        if termino:
+            print(
+                f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Coleta de informacoes dos Processos bem sucedida""")
+    if opcao == '5':
         if not termino:
             print(
                 f"""[\033[1;32m{datetime.datetime.now().replace(microsecond=0).isoformat(' ')}\033[0;0m] - Recolhendo informacoes da Rede""")
@@ -98,9 +105,8 @@ while running:
             if msg == '4':
                 log(msg)
                 resposta = processos.info_processos()
-                size = sys.getsizeof(resposta)
-                print(size)
                 resposta_bytes = pickle.dumps(resposta)
+                # size = sys.getsizeof(resposta_bytes)
                 socket_client.send(resposta_bytes)
                 log(msg, True)
             if msg == '5':
