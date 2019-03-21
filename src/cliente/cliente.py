@@ -2,7 +2,7 @@ import sys
 import socket
 import pickle
 
-BYTES = 4096
+BYTES = 4096000
 
 
 def tracinhos(cor):
@@ -44,7 +44,7 @@ def format_resposta(opcao, resposta):
         print(
             f"""{pipe_colorido('vermelho')} Conexao encerrada {pipe_colorido('vermelho')}""")
         print(tracinhos('vermelho'))
-    if opcao == '1':
+    elif opcao == '1':
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} CPU: {pipe_colorido('verde')}
           {pipe_colorido('verde')} Nome: {resposta[0]} {pipe_colorido('verde')}
@@ -60,7 +60,7 @@ def format_resposta(opcao, resposta):
             print(
                 f"""\t  {pipe_colorido('verde')} Porcentagem de uso nucleo {i + 1}: {resposta[9][i]} % {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
-    if opcao == '2':
+    elif opcao == '2':
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} Memoria: {pipe_colorido('verde')}
            {pipe_colorido('verde')} Memoria total: {resposta[0]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
@@ -69,7 +69,7 @@ def format_resposta(opcao, resposta):
            {pipe_colorido('verde')} Percentual de Uso: {resposta[3]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
            {pipe_colorido('verde')} Percentual disponivel: {resposta[4]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
-    if opcao == '3':
+    elif opcao == '3':
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} Disco: {pipe_colorido('verde')}
           {pipe_colorido('verde')} Armazenamento total: {resposta[0]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
@@ -77,24 +77,24 @@ def format_resposta(opcao, resposta):
           {pipe_colorido('verde')} Percentual em uso: {resposta[2]/1024/1024/1024:.2f} % {pipe_colorido('verde')}
           {pipe_colorido('verde')} Armazenamento disponivel: {resposta[3]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
-    if opcao == '4':
+    elif opcao == '4':
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} Processos: {pipe_colorido('verde')}""")
-        print(resposta)
         for key, value in resposta.items():
+            print(key)
+            print(value)
             print(f"""
-                {pipe_colorido('verde')} {key}: {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Nome: {resposta[0]} {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Executavel: {resposta[1]} {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Tempo de criacao: {resposta[2]} {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Tempo de usuario: {resposta[3]} s {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Tempo de sistema: {resposta[4]} s {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Percentual de uso da CPU: {resposta[5]:/2f} % {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Percentual de uso da memoria: {resposta[6]:/2f} % {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Numero de threads: {resposta[7]} {pipe_colorido('verde')}
-            """)
+                {pipe_colorido('verde')} PID: {key} {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Nome: {value[0]} {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Executavel: {value[1]} {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Tempo de criacao: {value[2]} {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Tempo de usuario: {value[3]} s {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Tempo de sistema: {value[4]} s {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Percentual de uso da CPU: {value[5]:.2f} % {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Percentual de uso da memoria: {value[6]:.2f} % {pipe_colorido('verde')}
+                {pipe_colorido('verde')} Numero de threads: {value[7]} {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
-    if opcao == '5':
+    elif opcao == '5':
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} Rede: {pipe_colorido('verde')}""")
         for key, value in resposta.items():
@@ -139,6 +139,16 @@ while running:
             mount_menu()
             opcao = input("""Opcao: """)
         cliente.send(opcao.encode())
+        # if opcao == '4':
+        #     resposta_array = []
+        #     while True:
+        #         resposta = pickle.loads(cliente.recv(BYTES))
+        #         if not resposta:
+        #             break
+        #         resposta_array.append(resposta)
+        #     resposta = pickle.loads(b"".join(resposta_array))
+        # else:
+        #     resposta = pickle.loads(cliente.recv(BYTES))
         resposta = pickle.loads(cliente.recv(BYTES))
         if resposta:
             format_resposta(opcao, resposta)
