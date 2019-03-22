@@ -4,6 +4,7 @@ import time
 
 def info_cpu():
     cpu_info = cpuinfo.get_cpu_info()
+    print(cpu_info)
     arch = cpu_info['arch'] #arquitetura
     brand = cpu_info['brand'] #nome
     bits = cpu_info['bits'] #palavra
@@ -15,3 +16,5 @@ def info_cpu():
     porc_uso = psutil.cpu_percent()
     porc_uso_core = psutil.cpu_percent(interval=1, percpu=True) # porcentagem de uso por núcleo
     return [brand, arch, bits, cpu_core, cpu_threads, freq_min, freq_max, freq_uso, porc_uso, porc_uso_core]
+
+print(info_cpu())

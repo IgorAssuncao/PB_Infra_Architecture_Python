@@ -20,8 +20,7 @@ def infoProcesso(process):
                              proc.cpu_times().system,
                              proc.cpu_percent(),
                              proc.memory_percent(),
-                             proc.memory_info(),
-                             proc.num_threads()
+                             proc.memory_info()
                              ]
     except:
         pass

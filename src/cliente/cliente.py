@@ -2,7 +2,7 @@ import sys
 import socket
 import pickle
 
-BYTES = 4096000
+BYTES = 250000
 
 
 def tracinhos(cor):
@@ -66,8 +66,8 @@ def format_resposta(opcao, resposta):
            {pipe_colorido('verde')} Memoria total: {resposta[0]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
            {pipe_colorido('verde')} Memoria disponivel: {resposta[1]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
            {pipe_colorido('verde')} Memoria em uso: {resposta[2]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
-           {pipe_colorido('verde')} Percentual de Uso: {resposta[3]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}
-           {pipe_colorido('verde')} Percentual disponivel: {resposta[4]/1024/1024/1024:.2f} GB {pipe_colorido('verde')}""")
+           {pipe_colorido('verde')} Percentual de Uso: {resposta[3]/1024/1024/1024:.2f} % {pipe_colorido('verde')}
+           {pipe_colorido('verde')} Percentual disponivel: {resposta[4]/1024/1024/1024:.2f} % {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
     elif opcao == '3':
         print(tracinhos('verde'))
@@ -81,8 +81,6 @@ def format_resposta(opcao, resposta):
         print(tracinhos('verde'))
         print(f"""{pipe_colorido('verde')} Processos: {pipe_colorido('verde')}""")
         for key, value in resposta.items():
-            print(key)
-            print(value)
             print(f"""
                 {pipe_colorido('verde')} PID: {key} {pipe_colorido('verde')}
                 {pipe_colorido('verde')} Nome: {value[0]} {pipe_colorido('verde')}
@@ -91,8 +89,7 @@ def format_resposta(opcao, resposta):
                 {pipe_colorido('verde')} Tempo de usuario: {value[3]} s {pipe_colorido('verde')}
                 {pipe_colorido('verde')} Tempo de sistema: {value[4]} s {pipe_colorido('verde')}
                 {pipe_colorido('verde')} Percentual de uso da CPU: {value[5]:.2f} % {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Percentual de uso da memoria: {value[6]:.2f} % {pipe_colorido('verde')}
-                {pipe_colorido('verde')} Numero de threads: {value[7]} {pipe_colorido('verde')}""")
+                {pipe_colorido('verde')} Percentual de uso da memoria: {value[6]:.2f} % {pipe_colorido('verde')}""")
         print(tracinhos('verde'))
     elif opcao == '5':
         print(tracinhos('verde'))

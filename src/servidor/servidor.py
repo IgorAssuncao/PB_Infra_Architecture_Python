@@ -9,7 +9,7 @@ import disco
 import rede
 import processos
 
-BYTES = 4096000
+BYTES = 250000
 
 
 def log(opcao, termino=False):
@@ -87,7 +87,11 @@ while running:
             if msg == '1':
                 log(msg)
                 resposta = cpu.info_cpu()
+                print('pegou resposta', resposta)
                 resposta_bytes = pickle.dumps(resposta)
+                print('pegou resposta_bytes', resposta_bytes)
+                size = sys.getsizeof(resposta_bytes)
+                print(size)
                 socket_client.send(resposta_bytes)
                 log(msg, True)
             if msg == '2':
@@ -106,7 +110,8 @@ while running:
                 log(msg)
                 resposta = processos.info_processos()
                 resposta_bytes = pickle.dumps(resposta)
-                # size = sys.getsizeof(resposta_bytes)
+                size = sys.getsizeof(resposta_bytes)
+                print(size)
                 socket_client.send(resposta_bytes)
                 log(msg, True)
             if msg == '5':
