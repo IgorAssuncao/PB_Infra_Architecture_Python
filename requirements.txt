@@ -1,0 +1,5 @@
+pylint
+autopep8
+psutil
+py-cpuinfo
+python-nmap
